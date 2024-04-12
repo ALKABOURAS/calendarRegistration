@@ -1,0 +1,36 @@
+{{#if user}}
+<div class="header">
+    <div class="user-container">
+        <a href="/user/{{user.id}}" class="user-icon">
+            <img class="user" src="/images/mikealfz.svg" alt="User Logo">
+        </a>
+        <span class="user-name">{{user.username}}</span>
+    </div>
+    <a href="/">
+        <img src="/images/logo.svg" alt="logo" class="logo">
+    </a>
+
+    <img class="bell" src="/images/bell.svg" alt="Bell Icon">
+</div>
+<div class="nav">
+    <ul>
+        <li><button id="closeAppointmentBtn">Κλείσε ένα ραντεβού</button></li>
+        <li><a href="/logout">Αποσύνδεση</a></li>
+    </ul>
+</div>
+{{else}}
+<div class="header">
+    <div class="user-container">
+        <span class="user-name">Log In</span>
+    </div>
+    <a href="/">
+        <img src="/images/logo.svg" alt="logo" class="logo">
+    </a>
+
+</div>
+<div class="nav">
+    <ul>
+        <li><button id="myBtn">Σύνδεση</button></li>
+    </ul>
+</div>
+{{/if}}

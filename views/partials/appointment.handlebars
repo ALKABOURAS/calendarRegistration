@@ -1,0 +1,100 @@
+<!-- views/partials/appointment.handlebars -->
+<div class="appointment-container">
+    <div class="appointment-details">
+        <div style="background: antiquewhite" class="user-info-dets-container">
+            <div class="user-info-name-container">
+                <span class="user-info-name">Τίτλος Ραντεβού</span>
+                <span class="user-info-name">{{this.title}}</span>
+            </div>
+            <div class="user-info-appointment-container">
+                <span class="user-info-name">Ημερομηνία</span>
+                <span class="user-info-name">{{this.date}}</span>
+            </div>
+            <div class="user-info-appointment-container">
+                <span class="user-info-name">Ώρα</span>
+                <span class="user-info-name">{{this.time}}</span>
+            </div>
+            <div class="user-info-appointment-container">
+                <span class="user-info-name">Συμμετέχοντες</span>
+                <span class="user-info-name">{{this.user_participants}}</span>
+            </div>
+            <div class="appointment-actions">
+            <button class="edit-appointment" data-id="{{this.id}}">Edit</button>
+            <button class="remove-appointment" data-id="{{this.id}}">Remove</button>
+        </div>
+        </div>
+
+
+    <form class="edit-appointment-form" style="display: none;">
+        <input type="hidden" name="id" value="{{this.id}}">
+        <input type="text" name="title" value="{{this.title}}">
+        <input type="date" name="date" value="{{this.date}}">
+        <input type="time" name="time" value="{{this.time}}">
+        <input type="text" name="user_participants" value="{{this.user_participants}}">
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<script>
+    // public/js/appointments.js
+    document.querySelectorAll('.edit-appointment').forEach(button => {
+        button.addEventListener('click', function() {
+            const appointmentId = this.dataset.id;
+            const form = document.querySelector(`.edit-appointment-form input[name="id"][value="${appointmentId}"]`).parentElement;
+            form.style.display = 'block';
+        });
+    });
+
+    document.querySelectorAll('.edit-appointment-form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const appointmentId = this.querySelector('input[name="id"]').value;
+            const title = this.querySelector('input[name="title"]').value;
+            const date = this.querySelector('input[name="date"]').value;
+            const time = this.querySelector('input[name="time"]').value;
+            const user_participants = this.querySelector('input[name="user_participants"]').value;
+            fetch(`/appointments/${appointmentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, date, time, user_participants }),
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update the appointment details in the DOM
+                            const appointmentContainer = this.parentElement;
+                            appointmentContainer.querySelector('.appointment-title').textContent = title;
+                            appointmentContainer.querySelector('.appointment-date').textContent = date;
+                            appointmentContainer.querySelector('.appointment-time').textContent = time;
+                            appointmentContainer.querySelector('.appointment-participant').textContent = user_participants;
+                            this.style.display = 'none';
+                        } else {
+                            // Show an error message
+                            alert('Failed to update appointment');
+                        }
+                    });
+        });
+    });
+
+    // public/js/appointments.js
+    document.querySelectorAll('.remove-appointment').forEach(button => {
+        button.addEventListener('click', function() {
+            const appointmentId = this.dataset.id;
+            fetch(`/appointments/${appointmentId}`, {
+                method: 'DELETE',
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove the appointment from the DOM
+                            this.parentElement.parentElement.remove();
+                        } else {
+                            // Show an error message
+                            alert('Failed to remove appointment');
+                        }
+                    });
+        });
+    });
+</script>

@@ -1,0 +1,114 @@
+<div class="user-info-container">
+    <div class="user-info-title-container">
+        <span class="user-info-title">Οι πληροφορίες μου</span>
+    </div>
+    <div class="user-info-dets-container">
+        <img class="user-info-img" src="/images/mikealfz.svg" alt="User Logo">
+        <div class="user-info-dets">
+            <div class="user-info-name-container">
+                <span class="user-info-name">Όνομα:</span>
+                <span class="user-info-name">{{user.username}}</span>
+            </div>
+            <div class="user-info-appointment-container">
+                <span class="user-info-name">Ραντεβού:</span>
+                <span class="user-info-name">{{total}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="user-info-container">
+    <div class="user-info-title-container">
+        <span class="user-info-title">Τα ραντεβού μου</span>
+    </div>
+    {{#if creatorAppointments}}
+        {{#each creatorAppointments}}
+            {{> appointment}}
+        {{/each}}
+    {{else}}
+        <span class="user-info-name">Δεν έχετε κανένα ραντεβού!</span>
+    {{/if}}
+
+</div>
+<div class="user-info-container">
+    <div class="user-info-title-container">
+        <span class="user-info-title">Τα ραντεβού που συμμετέχω</span>
+    </div>
+    {{#if participantAppointments}}
+        {{#each participantAppointments}}
+            {{> appointment}}
+        {{/each}}
+    {{else}}
+        <span class="user-info-name">Δεν συμμετέχετε σε κανένα ραντεβού!</span>
+    {{/if}}
+<div id="closeAppointmentModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id="closeAppointmentForm">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date">
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time">
+            <label for="user_participants">Participants:</label>
+            <input type="text" id="user_participants" name="user_participants">
+            <button type="submit">Close Appointment</button>
+        </form>
+    </div>
+</div>
+<script>
+// Get the modal
+var modal = document.getElementById("closeAppointmentModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("closeAppointmentBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+// Handle form submission
+// Handle form submission
+document.getElementById('closeAppointmentForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const title = this.querySelector('input[name="title"]').value;
+    const date = this.querySelector('input[name="date"]').value;
+    const time = this.querySelector('input[name="time"]').value;
+    const user_participants = this.querySelector('input[name="user_participants"]').value;
+    const user_creator = "{{user.username}}"; // Add this line
+    fetch('/appointments/close', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, date, time, user_participants, user_creator }), // Include user_creator in the body
+    })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Refresh the page to see the new appointment
+                    location.reload();
+                } else {
+                    // Show an error message
+                    alert('Failed to close appointment');
+                }
+            });
+});
+
+</script>

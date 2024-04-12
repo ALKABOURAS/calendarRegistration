@@ -1,0 +1,25 @@
+{
+  "name": "calendarregistrationreal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ALKABOURAS/calendarRegistration.git"
+  },
+  "private": true,
+  "devDependencies": {
+    "better-sqlite3": "^9.4.5",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.2",
+    "express-session": "^1.18.0"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
