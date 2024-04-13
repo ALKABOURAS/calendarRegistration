@@ -14,8 +14,21 @@
         <p>Don't have an account? <a href="/register">Register</a></p>
     </div>
 
-</div>
 
+</div>
+<div id="registerModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <form action="/register" method="post">
+            <label for="reg_username">Username:</label><br>
+            <input type="text" id="reg_username" name="username" required><br>
+            <label for="reg_password">Password:</label><br>
+            <input type="password" id="reg_password" name="password" required><br>
+            <input type="submit" value="Register">
+        </form>
+    </div>
+</div>
 <script>
     // Get the modal
     var modal = document.getElementById("myModal");
@@ -62,6 +75,62 @@
                     } else if (response.status === 401) {
                         // Login failed, show an alert
                         alert('Login failed');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+    });
+    // Get the modal
+    var registerModal = document.getElementById("registerModal");
+
+    // Get the button that opens the modal
+    var registerBtn = document.getElementById("registerBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[1]; // Assuming the second close button is for the register modal
+
+    // When the user clicks the button, open the modal
+    registerBtn.onclick = function() {
+        registerModal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        registerModal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == registerModal) {
+            registerModal.style.display = "none";
+        }
+    }
+
+    // Handle form submission
+    // Handle form submission
+    document.querySelector('form[action="/register"]').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var username = document.getElementById('reg_username').value;
+        var password = document.getElementById('reg_password').value;
+
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Registration successful, show an alert and redirect to the home page
+                        alert('Registration successful');
+                        window.location.href = '/';
+                    } else {
+                        // Registration failed, show an alert
+                        alert('Registration failed: ' + data.error);
                     }
                 })
                 .catch((error) => {

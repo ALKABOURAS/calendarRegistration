@@ -6,11 +6,11 @@
         </a>
         <span class="user-name">{{user.username}}</span>
     </div>
-    <a href="/">
-        <img src="/images/logo.svg" alt="logo" class="logo">
+    <img src="/images/logo.svg" alt="logo" class="logo">
+    <a href="/messages" style="display: flex;flex-direction: column;align-items: center">
+        <img class="bell" src="/images/bell.svg" alt="Bell Icon">
+        Messages <span class="unread">{{unreadCount}}</span>
     </a>
-
-    <img class="bell" src="/images/bell.svg" alt="Bell Icon">
 </div>
 <div class="nav">
     <ul>
@@ -31,6 +31,7 @@
 <div class="nav">
     <ul>
         <li><button id="myBtn">Σύνδεση</button></li>
+        <li><button id="registerBtn">Εγγραφή</button></li>
     </ul>
 </div>
 {{/if}}

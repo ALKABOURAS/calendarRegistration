@@ -38,11 +38,12 @@ app.use(session({
 }));
 
 app.use(require('./routes/routeHome.js'));
-// app.use(require('./routes/routeRegister.js'));
+app.use(require('./routes/routeRegister.js'));
 app.use(require('./routes/routeUserPage.js'));
 app.use(require('./routes/routeLogin.js'));
 app.use(require('./routes/routeLogout.js'));
 app.use(require('./routes/routeAppointments.js'));
+app.use(require('./routes/routeMessages.js'));
 
 app.listen(port, () => {
     console.log('Server is running on port 8080');
