@@ -16,7 +16,11 @@
             </div>
             <div class="user-info-appointment-container">
                 <span class="user-info-name">Συμμετέχοντες</span>
-                <span class="user-info-name">{{this.user_participants}}</span>
+                <span class="user-info-name">{{this.participants}}</span>
+            </div>
+             <div class="appointment-response">
+                <button class="approve-button" data-appointment-id="{{this.id}}">Approve</button>
+                <button class="reject-button" data-appointment-id="{{this.id}}">Reject</button>
             </div>
 
         </div>

@@ -12,6 +12,8 @@ db.exec('DROP TABLE IF EXISTS schedule');
 db.exec('DROP TABLE IF EXISTS messages');
 db.exec('DROP TABLE IF EXISTS notifications');
 db.exec('DROP TABLE IF EXISTS appointment_participants');
+db.exec('DROP TABLE IF EXISTS participants');
+db.exec('DROP TABLE IF EXISTS appointment_responses');
 // Create a `users` table with appropriate columns
 db.exec(`
     CREATE TABLE IF NOT EXISTS users (
@@ -53,5 +55,21 @@ db.exec(`CREATE TABLE appointment_participants (
     user_id INTEGER,
     PRIMARY KEY(appointment_id, user_id)
 )`);
+
+db.exec(`
+CREATE TABLE appointment_responses (
+    appointment_id INTEGER,
+    participant_id INTEGER,
+    response TEXT,
+    FOREIGN KEY(appointment_id) REFERENCES schedule(id),
+    FOREIGN KEY(participant_id) REFERENCES participants(id)
+)`);
+
+db.exec(`Create table participants (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+)`);
+
+
 
 console.log('Database and users table created successfully');

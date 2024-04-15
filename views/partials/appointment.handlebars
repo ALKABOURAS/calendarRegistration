@@ -3,7 +3,7 @@
     <div class="appointment-details">
         <div style="background: antiquewhite" class="user-info-dets-container">
             <div class="user-info-name-container">
-                <span class="user-info-name">Τίτλος Ραντεβού</span>
+                <span class="user-info-name">Τίτλος</span>
                 <span class="user-info-name">{{this.title}}</span>
             </div>
             <div class="user-info-appointment-container">
@@ -30,7 +30,7 @@
         <input type="text" name="title" value="{{this.title}}">
         <input type="date" name="date" value="{{this.date}}">
         <input type="time" name="time" value="{{this.time}}">
-        <input type="text" name="user_participants" value="{{this.participants}}">
+<!--        <input type="text" name="user_participants" value="{{this.participants}}">-->
         <button type="submit">Save</button>
     </form>
 </div>
@@ -53,8 +53,7 @@
             const title = this.querySelector('input[name="title"]').value;
             const date = this.querySelector('input[name="date"]').value;
             const time = this.querySelector('input[name="time"]').value;
-            const user_participants = this.querySelector('input[name="user_participants"]').value;
-            console.log(appointmentId, title, date, time, user_participants);
+            // const user_participants = this.querySelector('input[name="user_participants"]').value;
             fetch(`/appointments/${appointmentId}`, {
                 method: 'PUT',
                 headers: {

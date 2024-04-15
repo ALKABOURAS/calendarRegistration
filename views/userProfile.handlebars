@@ -142,4 +142,46 @@ document.getElementById('closeAppointmentForm').addEventListener('submit', funct
             });
 });
 
+document.querySelectorAll('.approve-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const appointmentId = this.dataset.appointmentId;
+        fetch(`/appointments/${appointmentId}/response`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ response: 'approved' }),
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Appointment approved successfully.');
+                    } else {
+                        alert('Failed to approve appointment.');
+                    }
+                });
+    });
+});
+
+document.querySelectorAll('.reject-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const appointmentId = this.dataset.appointmentId;
+        fetch(`/appointments/${appointmentId}/response`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ response: 'rejected' }),
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Appointment rejected successfully.');
+                    } else {
+                        alert('Failed to reject appointment.');
+                    }
+                });
+    });
+});
+
 </script>
