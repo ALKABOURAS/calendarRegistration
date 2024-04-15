@@ -10,6 +10,8 @@ const db = new Database(dbPath);
 db.exec('DROP TABLE IF EXISTS users');
 db.exec('DROP TABLE IF EXISTS schedule');
 db.exec('DROP TABLE IF EXISTS messages');
+db.exec('DROP TABLE IF EXISTS notifications');
+db.exec('DROP TABLE IF EXISTS appointment_participants');
 // Create a `users` table with appropriate columns
 db.exec(`
     CREATE TABLE IF NOT EXISTS users (
@@ -25,8 +27,7 @@ db.exec(`
         title TEXT NOT NULL,
         date TEXT NOT NULL,
         time TEXT NOT NULL,
-        user_creator TEXT NOT NULL,
-        user_participants TEXT NOT NULL
+        user_creator TEXT NOT NULL
     )
 `);
 // Create a "messages" table with appropriate columns
@@ -38,5 +39,19 @@ db.exec(`
         user_receiver TEXT NOT NULL
     )
 `);
+
+db.exec(`CREATE TABLE notifications (
+    id INTEGER PRIMARY KEY,
+    appointment_id INTEGER,
+    user_id INTEGER,
+    message TEXT,
+    unread BOOLEAN
+)`);
+
+db.exec(`CREATE TABLE appointment_participants (
+    appointment_id INTEGER,
+    user_id INTEGER,
+    PRIMARY KEY(appointment_id, user_id)
+)`);
 
 console.log('Database and users table created successfully');

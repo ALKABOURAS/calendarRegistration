@@ -11,8 +11,8 @@ router.get('/messages', (req, res) => {
     const userId = req.session.userId; // Assuming the userId is stored in the session
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
     const messages = db.prepare('SELECT * FROM messages WHERE receiver_id = ?').all(userId);
-    const unreadCount = db.prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND unread = 1').get(userId);
-    res.render('messages', { messages: messages, user: user, unreadCount: unreadCount.count(), css: 'messages'}); });
+    const notifications = db.prepare('SELECT * FROM notifications WHERE user_id = ?').all(userId);
+    res.render('messages', { messages: messages,notifications:notifications, user: user, css: 'messages'}); });
 
 router.post('/messages/send', (req, res) => {
     if (!req.session.userId) {

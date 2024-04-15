@@ -37,6 +37,15 @@ app.use(session({
     }
 }));
 
+app.use((req, res, next) => {
+    if (req.session.userId) {
+        const userId = req.session.userId;
+        const unreadCount = db.prepare('SELECT COUNT(*) as message FROM messages WHERE receiver_id = ? AND unread = 1').get(userId);
+        res.locals.unreadCount = unreadCount.message;
+    }
+    next();
+});
+
 app.use(require('./routes/routeHome.js'));
 app.use(require('./routes/routeRegister.js'));
 app.use(require('./routes/routeUserPage.js'));

@@ -1,23 +1,46 @@
 {{#if user}}
-<div class="header">
-    <div class="user-container">
-        <a href="/user/{{user.id}}" class="user-icon">
-            <img class="user" src="/images/mikealfz.svg" alt="User Logo">
-        </a>
-        <span class="user-name">{{user.username}}</span>
-    </div>
-    <img src="/images/logo.svg" alt="logo" class="logo">
-    <a href="/messages" style="display: flex;flex-direction: column;align-items: center">
-        <img class="bell" src="/images/bell.svg" alt="Bell Icon">
-        Messages <span class="unread">{{unreadCount}}</span>
-    </a>
-</div>
-<div class="nav">
-    <ul>
-        <li><button id="closeAppointmentBtn">Κλείσε ένα ραντεβού</button></li>
-        <li><a href="/logout">Αποσύνδεση</a></li>
-    </ul>
-</div>
+    {{#if messages}}
+        <div class="header">
+            <div class="user-container">
+                <a href="/user/{{user.id}}" class="user-icon">
+                    <img class="user" src="/images/mikealfz.svg" alt="User Logo">
+                </a>
+                <span class="user-name">{{user.username}}</span>
+            </div>
+            <img src="/images/logo.svg" alt="logo" class="logo">
+            <a href="/messages" style="display: flex;flex-direction: column;align-items: center">
+                <img class="bell" src="/images/bell.svg" alt="Bell Icon">
+                <span class="user-name" style="text-align: center;font-size:18px ">Messages:<br>{{unreadCount}}</span>
+            </a>
+        </div>
+        <div class="nav">
+            <ul>
+                <li><button id="sendMessageBtn">Αποστολή Μηνύματος</button></li>
+                <li><a href="/logout">Αποσύνδεση</a></li>
+            </ul>
+        </div>
+    {{else}}
+        <div class="header">
+            <div class="user-container">
+                <a href="/user/{{user.id}}" class="user-icon">
+                    <img class="user" src="/images/mikealfz.svg" alt="User Logo">
+                </a>
+                <span class="user-name">{{user.username}}</span>
+            </div>
+            <img src="/images/logo.svg" alt="logo" class="logo">
+            <a href="/messages" style="display: flex;flex-direction: column;align-items: center">
+                <img class="bell" src="/images/bell.svg" alt="Bell Icon">
+                <span class="user-name" style="text-align: center;font-size:18px ">Messages:<br>{{unreadCount}}</span>
+            </a>
+        </div>
+        <div class="nav">
+            <ul>
+                <li><button id="closeAppointmentBtn">Κλείσε ένα ραντεβού</button></li>
+                <li><a href="/logout">Αποσύνδεση</a></li>
+            </ul>
+        </div>
+    {{/if}}
+
 {{else}}
 <div class="header">
     <div class="user-container">

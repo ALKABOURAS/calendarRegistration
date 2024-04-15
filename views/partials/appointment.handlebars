@@ -16,7 +16,7 @@
             </div>
             <div class="user-info-appointment-container">
                 <span class="user-info-name">Συμμετέχοντες</span>
-                <span class="user-info-name">{{this.user_participants}}</span>
+                <span class="user-info-name">{{this.participants}}</span>
             </div>
             <div class="appointment-actions">
             <button class="edit-appointment" data-id="{{this.id}}">Edit</button>
@@ -30,9 +30,10 @@
         <input type="text" name="title" value="{{this.title}}">
         <input type="date" name="date" value="{{this.date}}">
         <input type="time" name="time" value="{{this.time}}">
-        <input type="text" name="user_participants" value="{{this.user_participants}}">
+        <input type="text" name="user_participants" value="{{this.participants}}">
         <button type="submit">Save</button>
     </form>
+</div>
 </div>
 
 <script>
@@ -53,6 +54,7 @@
             const date = this.querySelector('input[name="date"]').value;
             const time = this.querySelector('input[name="time"]').value;
             const user_participants = this.querySelector('input[name="user_participants"]').value;
+            console.log(appointmentId, title, date, time, user_participants);
             fetch(`/appointments/${appointmentId}`, {
                 method: 'PUT',
                 headers: {
@@ -64,11 +66,13 @@
                     .then(data => {
                         if (data.success) {
                             // Update the appointment details in the DOM
-                            const appointmentContainer = this.parentElement;
-                            appointmentContainer.querySelector('.appointment-title').textContent = title;
-                            appointmentContainer.querySelector('.appointment-date').textContent = date;
-                            appointmentContainer.querySelector('.appointment-time').textContent = time;
-                            appointmentContainer.querySelector('.appointment-participant').textContent = user_participants;
+                            // const appointmentContainer = this.parentElement;
+                            // appointmentContainer.querySelector('.title').textContent = title;
+                            // appointmentContainer.querySelector('.date').textContent = date;
+                            // appointmentContainer.querySelector('.time').textContent = time;
+                            // appointmentContainer.querySelector('.user_participants').textContent = user_participants;
+                            // refresh the page
+                            window.location.reload();
                             this.style.display = 'none';
                         } else {
                             // Show an error message
@@ -89,7 +93,7 @@
                     .then(data => {
                         if (data.success) {
                             // Remove the appointment from the DOM
-                            this.parentElement.parentElement.remove();
+                            window.location.reload();
                         } else {
                             // Show an error message
                             alert('Failed to remove appointment');

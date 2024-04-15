@@ -35,24 +35,27 @@
     </div>
     {{#if participantAppointments}}
         {{#each participantAppointments}}
-            {{> appointment}}
+            {{> appointmentParticipant}}
         {{/each}}
     {{else}}
         <span class="user-info-name">Δεν συμμετέχετε σε κανένα ραντεβού!</span>
     {{/if}} </div>
+
 <div id="closeAppointmentModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
         <form id="closeAppointmentForm">
-            <label for="title">Title:</label>
+            <label for="title">Τίτλος:</label>
             <input type="text" id="title" name="title">
-            <label for="date">Date:</label>
+            <label for="date" style="font-size: 20px">Ημ/νία:</label>
             <input type="date" id="date" name="date">
-            <label for="time">Time:</label>
+            <label for="time" style="font-size: 20px">Ώρα:</label>
             <input type="time" id="time" name="time">
-            <label for="user_participants">Participants:</label>
+            <br>
+            <label for="user_participants">Συμμετέχοντες:</label>
             <input type="text" id="user_participants" name="user_participants">
-            <button type="submit">Close Appointment</button>
+            <button type="button" id="addParticipant">Προσθήκη</button>
+            <button type="submit">Κλείσιμο Ραντεβού</button>
         </form>
     </div>
 </div>
@@ -83,29 +86,57 @@ window.onclick = function(event) {
   }
 }
 
-// Handle form submission
+document.getElementById('addParticipant').addEventListener('click', function() {
+    // Create a new input field
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.name = 'user_participants';
+
+    // Create a new "Remove Participant" button
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Διαγραφή';
+    removeButton.type = 'button';
+    removeButton.addEventListener('click', function() {
+        // Remove the input field and the button
+        newInput.remove();
+        removeButton.remove();
+    });
+
+    // Append the new input field and the button to the form
+    const form = document.getElementById('closeAppointmentForm');
+    form.insertBefore(newInput, this);
+    form.insertBefore(removeButton, this);
+});
+
+
 // Handle form submission
 document.getElementById('closeAppointmentForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const title = this.querySelector('input[name="title"]').value;
     const date = this.querySelector('input[name="date"]').value;
     const time = this.querySelector('input[name="time"]').value;
-    const user_participants = this.querySelector('input[name="user_participants"]').value;
-    const user_creator = "{{user.username}}"; // Add this line
+    const user_creator = "{{user.username}}";
+
+    // Get all participant input fields
+    const participantInputs = this.querySelectorAll('input[name="user_participants"]');
+    console.log(participantInputs);
+    console.log('Hello')
+
+    // Create an array of participants
+    const user_participants = Array.from(participantInputs).map(input => input.value);
+
     fetch('/appointments/close', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, date, time, user_participants, user_creator }), // Include user_creator in the body
+        body: JSON.stringify({ title, date, time, user_participants, user_creator }),
     })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Refresh the page to see the new appointment
                     location.reload();
                 } else {
-                    // Show an error message
                     alert('Failed to close appointment');
                 }
             });

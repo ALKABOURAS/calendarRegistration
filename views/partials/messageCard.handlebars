@@ -1,0 +1,28 @@
+<div id="message-{{this.id}}" class="message {{#if this.unread}}unread{{/if}}">
+    <div style="display:flex;flex-direction: column">
+        <div style="display: flex;flex-direction: column">
+            <span style="font-size: 20px; font-weight: bold">From: </span>
+            <span style="font-size: 20px">{{this.sender_id}}</span>
+        </div>
+        <br>
+        <div style="display: flex;flex-direction: column">
+            <span style="font-size: 20px; font-weight: bold">Message:</span>
+            <p style="font-size: 20px">{{this.message}}</p></div>
+    </div>
+    <div class="message-actions">
+<!--        <form action="/messages/read/{{this.id}}" method="post">-->
+<!--            <button type="submit">Διαβασμένο</button>-->
+<!--        </form>-->
+<!--        <form action="/messages/unread/{{this.id}}" method="post">-->
+<!--            <button type="submit">Αδιάβαστο</button>-->
+<!--        </form>-->
+<!--        <form action="/messages/delete/{{this.id}}" method="post">-->
+<!--            <button type="submit">Διαγραφή</button>-->
+<!--        </form>-->
+        <form action="/messages/delete/{{this.id}}" method="post">
+            <button style="border: none;padding: 0;margin: 0" type="submit">
+            <img src="/images/delete.svg" alt="Delete Icon" style="width: 20px;height: 20px">
+            </button>
+        </form>
+    </div>
+</div>

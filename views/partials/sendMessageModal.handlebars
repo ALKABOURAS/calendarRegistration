@@ -1,0 +1,13 @@
+<div id="sendMessageModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id="sendMessageForm">
+            <input type="hidden" name="sender_id" value="{{user.id}}">
+            <label for="receiver">Παραλήπτης:</label>
+            <input type="text" id="receiver" name="receiver">
+            <label for="message">Μήνυμα:</label>
+            <textarea id="message" name="message"></textarea>
+            <button type="submit">Αποστολή Μηνύματος</button>
+        </form>
+    </div>
+</div>

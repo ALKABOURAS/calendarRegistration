@@ -1,17 +1,20 @@
-<img style="position: fixed; top: 50%; left: 50%;transform: translate(-50%, -50%);" src="/images/banner.svg" alt="banner">
-<div id="myModal" class="modal">
+<div style="justify-content: center">
+    <img style="align-self: center" src="/images/banner.svg" alt="banner">
+</div>
 
+<div id="myModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close">&times;</span>
         <form action="/login" method="post">
+            <span style="font-size: 32px;font-weight: bold">Σύνδεση</span>
+            <br>
             <label for="username">Username:</label><br>
             <input type="text" id="username" name="username" required><br>
             <label for="password">Password:</label><br>
             <input type="password" id="password" name="password" required><br>
-            <input type="submit" value="Login">
+            <input type="submit" value="Σύνδεση">
         </form>
-        <p>Don't have an account? <a href="/register">Register</a></p>
     </div>
 
 
@@ -21,11 +24,13 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <form action="/register" method="post">
+            <span style="font-size: 32px;font-weight: bold">Εγγραφή</span>
+            <br>
             <label for="reg_username">Username:</label><br>
             <input type="text" id="reg_username" name="username" required><br>
             <label for="reg_password">Password:</label><br>
             <input type="password" id="reg_password" name="password" required><br>
-            <input type="submit" value="Register">
+            <input type="submit" value="Εγγραφή">
         </form>
     </div>
 </div>

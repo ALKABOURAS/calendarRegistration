@@ -11,21 +11,29 @@ router.get('/user/:id', (req, res) => {
     const userId = req.params.id;
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
     if (user) {
-        const count = db.prepare(`
-    SELECT COUNT(*) as total 
-    FROM schedule 
-    WHERE user_creator = ? OR user_participants = ?
-`).get(user.username, user.username);
-        const unreadCount = db.prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND unread = 1').get(userId);
-        const userCreatorAppointments = db.prepare('SELECT * FROM schedule WHERE user_creator = ?').all(user.username);
-        const userParticipantAppointments = db.prepare('SELECT * FROM schedule WHERE user_participants = ?').all(user.username);
+        const userCreatorAppointments = db.prepare(`
+        SELECT schedule.*, GROUP_CONCAT(participants.name) as participants
+        FROM schedule
+        LEFT JOIN appointment_participants ON schedule.id = appointment_participants.appointment_id
+        LEFT JOIN participants ON appointment_participants.participant_id = participants.id
+        WHERE schedule.user_creator = ?
+        GROUP BY schedule.id
+    `).all(user.username);
+
+        const userParticipantAppointments = db.prepare(`
+        SELECT schedule.*, GROUP_CONCAT(participants.name) as participants
+        FROM schedule
+        INNER JOIN appointment_participants ON schedule.id = appointment_participants.appointment_id
+        INNER JOIN participants ON appointment_participants.participant_id = participants.id
+        WHERE participants.name = ?
+        GROUP BY schedule.id
+    `).all(user.username);
+
         res.render('userProfile', {
             css:'userPage',
             user: user,
-            total: count.total,
             creatorAppointments: userCreatorAppointments,
-            participantAppointments: userParticipantAppointments,
-            unreadCount: unreadCount.total
+            participantAppointments: userParticipantAppointments
         });
     } else {
         res.status(404).send('User not found');

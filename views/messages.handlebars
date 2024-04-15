@@ -1,42 +1,54 @@
-<form id="send-message-form" class="message-form" action="/messages/send" method="post">
-    <input type="hidden" name="sender_id" value="{{user.id}}">
-    <div class="form-group">
-        <label for="receiver_username">Receiver:</label>
-        <input type="text" id="receiver_username" name="receiver_username" required>
-    </div>
-    <div class="form-group">
-        <label for="content">Message:</label>
-        <textarea id="content" name="content" required></textarea>
-    </div>
-    <button type="submit" class="submit-btn">Send</button>
-</form>
+<div class="user-info-title-container">
+    <span class="user-info-title">Τα μηνύματά μου</span>
+</div>
+<div id="messages-container" class="messages-container">
 
-<div id="messages-container">
 {{#each messages}}
-    <div class="message {{#if this.unread}}unread{{/if}}">
-        <p>From: {{this.sender_id}}</p>
-        <p>{{this.message}}</p>
-        <form action="/messages/read/{{this.id}}" method="post">
-            <button type="submit">Mark as Read</button>
-        </form>
-        <form action="/messages/unread/{{this.id}}" method="post">
-            <button type="submit">Mark as Unread</button>
-        </form>
-        <form action="/messages/delete/{{this.id}}" method="post">
-            <button type="submit">Delete</button>
-        </form>
-    </div>
+{{> messageCard this}}
 {{/each}}
+
 </div>
 
+<div class="user-info-title-container">
+    <span class="user-info-title">Οι ειδοποιήσεις μου</span>
+</div>
+<div class="notifications-container">
+    {{#each notifications}}
+        {{> notificationCard this}}
+    {{/each}}
+</div>
+{{> sendMessageModal}}
 <script>
-    document.getElementById('send-message-form').addEventListener('submit', function(event) {
+    // Get the button that opens the modal
+    var sendMessageBtn = document.getElementById("sendMessageBtn");
+
+    // When the user clicks the button, open the modal
+    sendMessageBtn.onclick = function() {
+        sendMessageModal.style.display = "block";
+    }
+    // Get the modal
+    var sendMessageModal = document.getElementById("sendMessageModal");
+
+    // Get the <span> element that closes the modal
+    var closeSendMessageModal = sendMessageModal.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    closeSendMessageModal.onclick = function() {
+        sendMessageModal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == sendMessageModal) {
+            sendMessageModal.style.display = "none";
+        }
+    }
+    // Handle form submission
+    document.getElementById('sendMessageForm').addEventListener('submit', function(event) {
         event.preventDefault();
-
-        var sender_id = document.querySelector('input[name="sender_id"]').value;
-        var receiver_username = document.querySelector('input[name="receiver_username"]').value;
-        var content = document.querySelector('textarea[name="content"]').value;
-
+        const sender_id = this.querySelector('input[name="sender_id"]').value;
+        const receiver_username = this.querySelector('input[name="receiver"]').value;
+        const content = this.querySelector('textarea[name="message"]').value;
         fetch('/messages/send', {
             method: 'POST',
             headers: {
@@ -46,14 +58,14 @@
         })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.error) {
-                        alert(data.error);
+                    if (data.success) {
+                        // Refresh the page to see the new message
+                        location.reload();
                     } else {
-                        alert(data.success);
+                        // Show an error message
+                        alert('Failed to send message');
                     }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
                 });
     });
+
 </script>
