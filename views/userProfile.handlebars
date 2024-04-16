@@ -16,30 +16,33 @@
         </div>
     </div>
 </div>
-<div class="user-info-container">
-    <div class="user-info-title-container">
+
+<div class="user-info-title-container" style="margin-bottom: 1%">
         <span class="user-info-title">Τα ραντεβού μου</span>
     </div>
+<div class="appointment-container">
     {{#if creatorAppointments}}
         {{#each creatorAppointments}}
             {{> appointment}}
         {{/each}}
-    {{else}}
-        <span class="user-info-name">Δεν έχετε κανένα ραντεβού!</span>
-    {{/if}}
 
+    {{else}}
+        <span class="user-info-name" style="margin: 5%">Δεν έχετε κανένα ραντεβού!</span>
+    {{/if}}
 </div>
-<div class="user-info-container">
-    <div class="user-info-title-container">
-        <span class="user-info-title">Τα ραντεβού που συμμετέχω</span>
+<div class="user-info-title-container" style="margin-bottom: 1%;text-align: center">
+        <span class="user-info-title" >Τα ραντεβού που συμμετέχω</span>
     </div>
+<div class="appointment-container">
     {{#if participantAppointments}}
         {{#each participantAppointments}}
             {{> appointmentParticipant}}
         {{/each}}
+
     {{else}}
-        <span class="user-info-name">Δεν συμμετέχετε σε κανένα ραντεβού!</span>
-    {{/if}} </div>
+        <span class="user-info-name" style="margin: 5%">Δεν συμμετέχετε σε κανένα ραντεβού!</span>
+    {{/if}}
+</div>
 
 <div id="closeAppointmentModal" class="modal">
     <div class="modal-content">
@@ -183,5 +186,80 @@ document.querySelectorAll('.reject-button').forEach(button => {
                 });
     });
 });
+function toggleFormVisibility(form) {
+    if (form.style.display === 'none' || form.style.display === '') {
+        form.style.display = 'flex';
+        form.style.flexDirection = 'column';
+        form.style.border = '1px solid black';
+        form.style.padding = '10px';
 
+    } else {
+        form.style.display = 'none';
+    }
+}
+// public/js/appointments.js
+document.querySelectorAll('.edit-appointment').forEach(button => {
+    button.addEventListener('click', function() {
+        const appointmentId = this.dataset.id;
+        const form = document.querySelector(`.edit-appointment-form input[name="id"][value="${appointmentId}"]`).parentElement;
+        toggleFormVisibility(form);
+    });
+});
+
+
+
+document.querySelectorAll('.edit-appointment-form').forEach(form => {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const appointmentId = this.querySelector('input[name="id"]').value;
+        const title = this.querySelector('input[name="title"]').value;
+        const date = this.querySelector('input[name="date"]').value;
+        const time = this.querySelector('input[name="time"]').value;
+        // const user_participants = this.querySelector('input[name="user_participants"]').value;
+        fetch(`/appointments/${appointmentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title, date, time, user_participants }),
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the appointment details in the DOM
+                        // const appointmentContainer = this.parentElement;
+                        // appointmentContainer.querySelector('.title').textContent = title;
+                        // appointmentContainer.querySelector('.date').textContent = date;
+                        // appointmentContainer.querySelector('.time').textContent = time;
+                        // appointmentContainer.querySelector('.user_participants').textContent = user_participants;
+                        // refresh the page
+                        window.location.reload();
+                        this.style.display = 'none';
+                    } else {
+                        // Show an error message
+                        alert('Failed to update appointment');
+                    }
+                });
+    });
+});
+
+// public/js/appointments.js
+document.querySelectorAll('.remove-appointment').forEach(button => {
+    button.addEventListener('click', function() {
+        const appointmentId = this.dataset.id;
+        fetch(`/appointments/${appointmentId}`, {
+            method: 'DELETE',
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the appointment from the DOM
+                        window.location.reload();
+                    } else {
+                        // Show an error message
+                        alert('Failed to remove appointment');
+                    }
+                });
+    });
+});
 </script>

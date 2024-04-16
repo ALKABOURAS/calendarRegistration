@@ -1,28 +1,29 @@
 <!-- views/partials/appointment.handlebars -->
-<div class="appointment-container">
-    <div class="appointment-details">
-        <div style="background: antiquewhite" class="user-info-dets-container">
+<div class="appointment-details">
+        <div style="flex-direction: column" class="user-info-dets-container">
+            <div class="user-info-name-container">
+                <span class="user-info-name">ID</span>
+                <span class="user-info-name" style="font-weight: normal">{{this.id}}</span>
+            </div>
             <div class="user-info-name-container">
                 <span class="user-info-name">Τίτλος</span>
-                <span class="user-info-name">{{this.title}}</span>
+                <span class="user-info-name" style="font-weight: normal">{{this.title}}</span>
             </div>
             <div class="user-info-appointment-container">
                 <span class="user-info-name">Ημερομηνία</span>
-                <span class="user-info-name">{{this.date}}</span>
+                <span class="user-info-name" style="font-weight: normal">{{this.date}}</span>
             </div>
             <div class="user-info-appointment-container">
                 <span class="user-info-name">Ώρα</span>
-                <span class="user-info-name">{{this.time}}</span>
+                <span class="user-info-name" style="font-weight: normal">{{this.time}}</span>
             </div>
             <div class="user-info-appointment-container">
                 <span class="user-info-name">Συμμετέχοντες</span>
-                <span class="user-info-name">{{this.participants}}</span>
+                <span class="user-info-name" style="font-weight: normal">{{this.participants}}</span>
             </div>
              <div class="appointment-response">
                 <button class="approve-button" data-appointment-id="{{this.id}}">Approve</button>
                 <button class="reject-button" data-appointment-id="{{this.id}}">Reject</button>
             </div>
-
-        </div>
-    </div>
+</div>
 </div>

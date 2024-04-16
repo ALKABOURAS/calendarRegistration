@@ -10,9 +10,12 @@ router.get('/messages', (req, res) => {
     }
     const userId = req.session.userId; // Assuming the userId is stored in the session
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    const messagePage = 'messagePage'
     const messages = db.prepare('SELECT * FROM messages WHERE receiver_id = ?').all(userId);
-    const notifications = db.prepare('SELECT notifications.id, notifications.text, notifications.created_at, participants.name FROM notifications INNER JOIN participants ON notifications.participant_id = participants.id WHERE participant_id = ?').all(userId);
-    res.render('messages', { messages: messages,notifications:notifications, user: user, css: 'messages'}); });
+    const notifications = db.prepare('SELECT notifications.id, notifications.text, notifications.created_at, participants.name FROM notifications INNER JOIN participants ON notifications.participant_id = participants.id WHERE participants.name= ?').all(user.username);
+    const notificationsResponses = db.prepare('SELECT * FROM notifications WHERE user_id = ?').all(userId); // Fetch notifications for the user
+    const notificationsTotal = notifications.concat(notificationsResponses);
+    res.render('messages', {messagePage: messagePage, messages: messages,notifications:notificationsTotal, user: user, css: 'messages'}); });
 
 router.post('/messages/send', (req, res) => {
     if (!req.session.userId) {

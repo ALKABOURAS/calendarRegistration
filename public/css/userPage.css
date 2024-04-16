@@ -60,3 +60,24 @@ background: #FFFFFF}
     font-weight: 700;
     line-height: normal;
 }
+
+.appointment-container{
+    flex: 1;
+    width: 99%;
+    overflow-x: auto; /* This makes the container scrollable horizontally */
+    display: flex;
+    flex-direction: row; /* This arranges the appointment cards in a row */
+    flex-wrap: nowrap; /* This prevents the appointment cards from wrapping to the next row */
+    border: 2px solid #000;
+    background: #8cda79;
+}
+.appointment-details{
+    flex: 0 0 auto; /* This makes the appointment cards take up as much space as they need */
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}

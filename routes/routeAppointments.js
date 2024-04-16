@@ -9,7 +9,7 @@ router.use('/appointments/:id', (req, res, next) => {
     if (req.method === 'PUT' || req.method === 'DELETE') {
         const appointmentId = req.params.id;
         const participants = db.prepare('SELECT participants.id FROM participants INNER JOIN appointment_participants ON participants.id = appointment_participants.participant_id WHERE appointment_participants.appointment_id = ?').all(appointmentId);
-
+        console.log(participants)
         participants.forEach(participant => {
             // Insert a notification into the notifications table
             const notificationText = `The appointment with ID ${appointmentId} has been updated.`;
@@ -104,9 +104,9 @@ router.post('/appointments/:id/response', (req, res) => {
         db.prepare('INSERT INTO appointment_responses (appointment_id, participant_id, response) VALUES (?, ?, ?)').run(appointmentId, participantId, response);
     }
     const creator = db.prepare('SELECT user_creator FROM schedule WHERE id = ?').get(appointmentId);
+    const creatorId = db.prepare('SELECT id FROM users WHERE username = ?').get(creator.user_creator).id;
     const notificationText = `Participant ${participantId} has ${response} the appointment with ID ${appointmentId}.`;
-    db.prepare('INSERT INTO notifications (participant_id, text) VALUES (?, ?)').run(creator.user_creator, notificationText);
-
+    db.prepare('INSERT INTO notifications (user_id, text) VALUES (?, ?)').run(creatorId, notificationText);
 
     res.json({ success: 'Response recorded successfully.' });
 });
