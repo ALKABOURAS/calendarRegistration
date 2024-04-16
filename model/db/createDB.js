@@ -16,67 +16,98 @@ db.exec('DROP TABLE IF EXISTS participants');
 db.exec('DROP TABLE IF EXISTS appointment_responses');
 db.exec('DROP TABLE IF EXISTS notification_responses');
 // Create a `users` table with appropriate columns
-db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
-    )
-`);
-// Create a `schedule` table with appropriate columns
-db.exec(`
-    CREATE TABLE IF NOT EXISTS schedule (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        date TEXT NOT NULL,
-        time TEXT NOT NULL,
-        user_creator TEXT NOT NULL
-    )
-`);
-// Create a "messages" table with appropriate columns
-db.exec(`
-    CREATE TABLE IF NOT EXISTS messages (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        message TEXT NOT NULL,
-        user_creator TEXT NOT NULL,
-        user_receiver TEXT NOT NULL
-    )
-`);
+db.exec(`create table messages
+(
+    id          INTEGER
+primary key autoincrement,
+    message     TEXT not null,
+    sender_id   TEXT not null,
+    receiver_id TEXT not null,
+    unread      INTEGER default 1
+);
 
-db.exec(`CREATE TABLE notifications (
-    id INTEGER PRIMARY KEY,
-    appointment_id INTEGER,
-    user_id INTEGER,
-    message TEXT,
-    unread BOOLEAN
-)`);
+create table messages_dg_tmp
+(
+    id          INTEGER
+primary key autoincrement,
+    message     TEXT not null,
+    creator_id  TEXT not null,
+    receiver_id TEXT not null,
+    unread      INTEGER default 1
+);
 
-db.exec(`CREATE TABLE appointment_participants (
-    appointment_id INTEGER,
-    user_id INTEGER,
-    PRIMARY KEY(appointment_id, user_id)
-)`);
+create table participants
+(
+    id   INTEGER
+primary key,
+    name TEXT not null
+);
 
-db.exec(`
-CREATE TABLE appointment_responses (
-    appointment_id INTEGER,
-    participant_id INTEGER,
-    response TEXT,
-    FOREIGN KEY(appointment_id) REFERENCES schedule(id),
-    FOREIGN KEY(participant_id) REFERENCES participants(id)
-)`);
+create table notifications
+(
+    id             INTEGER
+primary key autoincrement,
+    participant_id INTEGER
+references participants,
+    text           TEXT,
+    created_at     TIMESTAMP default CURRENT_TIMESTAMP,
+    user_id        INTEGER
+);
 
-db.exec(`Create table participants (
-    id INTEGER PRIMARY KEY,
-    name TEXT
-)`);
+create table schedule
+(
+    id           INTEGER
+primary key autoincrement,
+    title        TEXT not null,
+    date         TEXT not null,
+    time         TEXT not null,
+    user_creator TEXT not null
+);
 
-db.exec(`create table notification_responses (
-    id serial primary key,
-    user_id integer references users(id),
-    response text,
-    created_at timestamp default current_timestamp
-);`);
+create table appointment_participants
+(
+    appointment_id INTEGER
+references schedule,
+    participant_id INTEGER
+references participants,
+    primary key (appointment_id, participant_id)
+);
+
+create table appointment_responses
+(
+    appointment_id INTEGER
+references schedule,
+    participant_id INTEGER
+references participants,
+    response       TEXT
+);
+
+create table sqlite_master
+(
+    type     TEXT,
+    name     TEXT,
+    tbl_name TEXT,
+    rootpage INT,
+    sql      TEXT
+);
+
+create table sqlite_sequence
+(
+    name,
+    seq
+);
+
+create table users
+(
+    id       INTEGER
+primary key autoincrement,
+    username TEXT not null
+unique,
+    password TEXT not null
+);`
+
+);
+
 
 
 
