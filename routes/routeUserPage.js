@@ -48,15 +48,16 @@ router.get('/user/:id', (req, res) => {
         //     userParticipantAppointmentsTotal.push(appointments);
         // });
         const userParticipantAppointmentsTotal = db.prepare(`
-    SELECT schedule.*, GROUP_CONCAT(participants.name) as participants
+    SELECT schedule.*, GROUP_CONCAT(participants.name) as participants, appointment_responses.response
     FROM schedule
     INNER JOIN appointment_participants ON schedule.id = appointment_participants.appointment_id
     INNER JOIN participants ON appointment_participants.participant_id = participants.id
+    LEFT JOIN appointment_responses ON appointment_participants.appointment_id = appointment_responses.appointment_id AND appointment_participants.participant_id = appointment_responses.participant_id
     WHERE schedule.id IN (
         SELECT appointment_id FROM appointment_participants
         WHERE participant_id IN (SELECT id FROM participants WHERE name = ?)
     )
-    GROUP BY schedule.id
+    GROUP BY schedule.id,appointment_responses.response
 `).all(user.username);
 
         res.render('userProfile', {

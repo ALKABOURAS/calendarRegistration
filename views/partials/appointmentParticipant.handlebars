@@ -1,5 +1,5 @@
 <!-- views/partials/appointment.handlebars -->
-<div class="appointment-details">
+<div class="appointment-details" id="appointment-{{this.id}}">
         <div style="flex-direction: column" class="user-info-dets-container">
             <div class="user-info-name-container">
                 <span class="user-info-name">ID</span>
@@ -35,3 +35,17 @@
             </div>
 </div>
 </div>
+
+<script>
+    var appointmentContainer = document.getElementById('appointment-{{this.id}}');
+    var response = '{{this.response}}';
+    if (response === 'approved') {
+        appointmentContainer.style.backgroundColor = '#236742';
+        appointmentContainer.style.color = 'white';
+    } else if (response === 'rejected') {
+        appointmentContainer.style.backgroundColor = '#932626';
+        appointmentContainer.style.color = 'white';
+    } else {
+        appointmentContainer.style.backgroundColor = 'white';
+    }
+</script>

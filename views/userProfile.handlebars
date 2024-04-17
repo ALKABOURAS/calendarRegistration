@@ -160,6 +160,7 @@ document.querySelectorAll('.approve-button').forEach(button => {
                 .then(data => {
                     if (data.success) {
                         alert('Appointment approved successfully.');
+                        window.location.reload();
                     } else {
                         alert('Failed to approve appointment.');
                     }
@@ -181,6 +182,7 @@ document.querySelectorAll('.reject-button').forEach(button => {
                 .then(data => {
                     if (data.success) {
                         alert('Appointment rejected successfully.');
+                        window.location.reload();
                     } else {
                         alert('Failed to reject appointment.');
                     }
