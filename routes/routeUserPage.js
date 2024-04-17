@@ -28,12 +28,42 @@ router.get('/user/:id', (req, res) => {
         WHERE participants.name = ?
         GROUP BY schedule.id
     `).all(user.username);
+//         const userParticipantAppointments = db.prepare(`
+//     SELECT schedule.*, GROUP_CONCAT(participants.name) as participants
+//     FROM schedule
+//     INNER JOIN appointment_participants ON schedule.id = appointment_participants.appointment_id
+//     INNER JOIN participants ON appointment_participants.participant_id = participants.id
+//     GROUP BY schedule.id
+// `).all();
+
+        // const userParticipantAppointmentsTotal = [];
+        // userParticipantAppointments.forEach(appointment => {
+        //
+        //     const appointments = db.prepare(`SELECT schedule.*, GROUP_CONCAT(participants.name) as participants
+        //     FROM schedule
+        //     INNER JOIN appointment_participants ON schedule.id = appointment_participants.appointment_id
+        //     INNER JOIN participants ON appointment_participants.participant_id = participants.id
+        //     WHERE schedule.id = ?
+        //     GROUP BY schedule.id`).all(appointment.id);
+        //     userParticipantAppointmentsTotal.push(appointments);
+        // });
+        const userParticipantAppointmentsTotal = db.prepare(`
+    SELECT schedule.*, GROUP_CONCAT(participants.name) as participants
+    FROM schedule
+    INNER JOIN appointment_participants ON schedule.id = appointment_participants.appointment_id
+    INNER JOIN participants ON appointment_participants.participant_id = participants.id
+    WHERE schedule.id IN (
+        SELECT appointment_id FROM appointment_participants
+        WHERE participant_id IN (SELECT id FROM participants WHERE name = ?)
+    )
+    GROUP BY schedule.id
+`).all(user.username);
 
         res.render('userProfile', {
             css:'userPage',
             user: user,
             creatorAppointments: userCreatorAppointments,
-            participantAppointments: userParticipantAppointments
+            participantAppointments: userParticipantAppointmentsTotal
         });
     } else {
         res.status(404).send('User not found');

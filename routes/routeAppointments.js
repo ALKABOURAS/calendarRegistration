@@ -9,7 +9,6 @@ router.use('/appointments/:id', (req, res, next) => {
     if (req.method === 'PUT' || req.method === 'DELETE') {
         const appointmentId = req.params.id;
         const participants = db.prepare('SELECT participants.id FROM participants INNER JOIN appointment_participants ON participants.id = appointment_participants.participant_id WHERE appointment_participants.appointment_id = ?').all(appointmentId);
-        console.log(participants)
         participants.forEach(participant => {
             // Insert a notification into the notifications table
             const notificationText = `The appointment with ID ${appointmentId} has been updated.`;
