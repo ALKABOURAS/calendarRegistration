@@ -49,11 +49,13 @@
         <span class="close">&times;</span>
         <form id="closeAppointmentForm">
             <label for="title">Τίτλος:</label>
-            <input type="text" id="title" name="title">
+            <input type="text" id="title" name="title" required>
             <label for="date" style="font-size: 20px">Ημ/νία:</label>
-            <input type="date" id="date" name="date">
+            <input type="date" id="date" name="date" required>
             <label for="time" style="font-size: 20px">Ώρα:</label>
-            <input type="time" id="time" name="time">
+            <input type="time" id="time" name="time" required>
+            <label for="length">Διάρκεια:</label>
+            <input type="number" id="length" name="length" required>
             <br>
             <label for="user_participants">Συμμετέχοντες:</label>
             <input type="text" id="user_participants" name="user_participants">
@@ -118,12 +120,11 @@ document.getElementById('closeAppointmentForm').addEventListener('submit', funct
     const title = this.querySelector('input[name="title"]').value;
     const date = this.querySelector('input[name="date"]').value;
     const time = this.querySelector('input[name="time"]').value;
+    const length = this.querySelector('input[name="length"]').value;
     const user_creator = "{{user.username}}";
 
     // Get all participant input fields
     const participantInputs = this.querySelectorAll('input[name="user_participants"]');
-    console.log(participantInputs);
-    console.log('Hello')
 
     // Create an array of participants
     const user_participants = Array.from(participantInputs).map(input => input.value);
@@ -133,7 +134,7 @@ document.getElementById('closeAppointmentForm').addEventListener('submit', funct
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, date, time, user_participants, user_creator }),
+        body: JSON.stringify({ title, date, time,length, user_participants, user_creator }),
     })
             .then(response => response.json())
             .then(data => {

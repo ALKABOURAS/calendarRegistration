@@ -23,23 +23,18 @@ router.use('/appointments/:id', (req, res, next) => {
 router.delete('/appointments/:id', (req, res) => {
     const appointmentId = req.params.id;
     const transaction = db.transaction(() => {
-        // Delete any rows in other tables that reference this appointment_id
-        // Replace 'other_table' and 'appointment_id_column_in_other_table' with your actual table and column names
+        // Delete the referencing records in the appointment_participants table
         db.prepare('DELETE FROM appointment_participants WHERE appointment_id = ?').run(appointmentId);
-        db.prepare('DELETE FROM participants WHERE id NOT IN (SELECT participant_id FROM appointment_participants)').run();
 
-        // Then delete the appointment from the schedule and appointment_participants tables
-        const info = db.prepare('DELETE FROM schedule WHERE id = ?').run(appointmentId);
-        db.prepare('DELETE FROM appointment_participants WHERE appointment_id = ?').run(appointmentId);
-        return info.changes;
+        // Delete the referencing records in the appointment_responses table
+        db.prepare('DELETE FROM appointment_responses WHERE appointment_id = ?').run(appointmentId);
+
+        // Now you can delete the appointment
+        db.prepare('DELETE FROM schedule WHERE id = ?').run(appointmentId);
     });
 
-    const changes = transaction();
-    if (changes > 0) {
-        res.json({ success: true });
-    } else {
-        res.json({ success: false });
-    }
+    transaction();
+    res.json({ success: 'Appointment deleted successfully.' });
 });
 // routes/routeAppointments.js
 router.put('/appointments/:id', (req, res) => {
@@ -66,10 +61,11 @@ router.put('/appointments/:id', (req, res) => {
 });
 
 router.post('/appointments/close', (req, res) => {
-    const { title, date, time, user_participants, user_creator } = req.body;
+    const { title, date, time,length, user_participants, user_creator } = req.body;
+    console.log(req.body);
 
     // Insert the appointment into the schedule table
-    const info = db.prepare('INSERT INTO schedule (title, date, time, user_creator) VALUES (?, ?, ?, ?)').run(title, date, time, user_creator);
+    const info = db.prepare('INSERT INTO schedule (title, date, time,length, user_creator) VALUES (?, ?, ?,?, ?)').run(title, date, time,parseInt(length), user_creator);
 
     // Handle participants
     user_participants.forEach(participant => {
