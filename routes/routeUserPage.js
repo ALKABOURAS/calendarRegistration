@@ -62,6 +62,7 @@ router.get('/user/:id', (req, res) => {
         res.render('userProfile', {
             css:'userPage',
             user: user,
+            title: 'User Profile',
             creatorAppointments: userCreatorAppointments,
             participantAppointments: userParticipantAppointmentsTotal
         });
