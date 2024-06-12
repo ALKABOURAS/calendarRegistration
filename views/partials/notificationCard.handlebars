@@ -1,17 +1,17 @@
 <div id="message-{{this.id}}" class="message {{#if this.unread}}unread{{/if}}">
     <div style="display:flex;flex-direction: column">
         <div style="display: flex;flex-direction: column">
-            <span style="font-size: 20px; font-weight: bold">From: </span>
+            <span style="font-size: 20px; font-weight: bold">Αποστολέας: </span>
             <span style="font-size: 20px">{{this.name}}</span>
         </div>
         <br>
         <div style="display: flex;flex-direction: column">
-            <span style="font-size: 20px; font-weight: bold">Created at: </span>
+            <span style="font-size: 20px; font-weight: bold">Ημ/νία: </span>
             <span style="font-size: 20px">{{this.created_at}}</span>
         </div>
         <br>
         <div style="display: flex;flex-direction: column">
-            <span style="font-size: 20px; font-weight: bold">Message:</span>
+            <span style="font-size: 20px; font-weight: bold">Μήνυμα:</span>
             <p style="font-size: 20px">{{this.text}}</p></div>
     </div>
     <div class="message-actions">
